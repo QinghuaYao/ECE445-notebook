@@ -1,20 +1,33 @@
 import cv2
 import numpy as np
 from pupil_apriltags import Detector
+import os
+import time 
+
+a = 0.33
+b = 0.33
+ROI = [None, None, None, None]
+found = False
 
 def main():
-    cap = cv2.VideoCapture(1)
-    at_detector = Detector(families='tag25h9', nthreads=4)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920) # Set width
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080) # Set height
-    cap.set(cv2.CAP_PROP_FPS, 60)
+    cap = cv2.VideoCapture(0)
+    os.add_dll_directory(r"E:\Users\Djisa\Anaconda\envs\gym_env39\lib\site-packages\pupil_apriltags.libs")
+    at_detector = Detector(families='tag25h9', nthreads=4, quad_decimate=2.0)
+    times = []
+    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920) # Set width
+    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080) # Set height
+    # cap.set(cv2.CAP_PROP_FPS, 60)
+    
     while True:
         ret, frame = cap.read()
         if not ret:
             break
-        
+        start_time = time.perf_counter()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        tags = at_detector.detect(gray, estimate_tag_pose=True, camera_params=(600, 600, 320, 240), tag_size=0.05)
+        tags = at_detector.detect(gray, estimate_tag_pose=True, camera_params=(600, 600, 320, 240), tag_size=0.082)
+        
+        end_time = time.perf_counter()
+        print(tags)
         cv2.namedWindow("AprilTag Detector",cv2.WINDOW_NORMAL)
         cv2.imshow("AprilTag Detector", frame)
         cv2.resizeWindow("AprilTag Detector", 600, 400)
@@ -41,6 +54,10 @@ def main():
         cv2.resizeWindow("AprilTag Detector", 600, 400)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+        times.append((end_time - start_time) * 1e6)
+        avg_time = np.mean(times[-100:])
+        print(f"Average Calculation Time: {avg_time:.2f} us")
+        print(f"Execution Time: {(end_time - start_time) * 1e3:.2f} us")
     
     cap.release()
     cv2.destroyAllWindows()
