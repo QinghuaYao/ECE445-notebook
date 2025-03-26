@@ -15,3 +15,7 @@ Below are the power and input/output connectors for the board
 ![image](https://github.com/user-attachments/assets/3f07a5b6-8017-44ec-b584-96873469a5bc)
 ![image](https://github.com/user-attachments/assets/38165c13-722d-4e35-904f-fa8baf87cd60)
 
+
+TRIED USING BLUETOOTH - BLUETOOTH LOW ENERGY IS SLOW AND REQUIRES CONSTANT SIGNALS
+TRIED USING WIFI - WIFI PING HAS LARGE JITTER
+SWITCHING TO ESPNOW
