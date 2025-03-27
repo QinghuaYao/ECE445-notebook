@@ -3,7 +3,7 @@ from gymnasium import spaces
 import pygame
 import numpy as np
 import math
-import tensorflow as tf
+# import tensorflow as tf
 import time
 import logging
 import random
@@ -143,10 +143,10 @@ class BattlebotsEnv(gymnasium.Env):
 
         if fire > 0.9 and self.red_robot["hammer_cooldown"] == 0:
             self.red_robot["hammer_active"] = True
-            self.red_robot["hammer_cooldown"] = FPS // 2
+            self.red_robot["hammer_cooldown"] = FPS * 3 // 2
         elif self.red_robot["hammer_cooldown"] > 0:
             self.red_robot["hammer_cooldown"] -= 1
-            if self.red_robot["hammer_cooldown"] <= FPS // 3:
+            if self.red_robot["hammer_cooldown"] <= FPS * 1.1:
                 self.red_robot["hammer_active"] = False
         
         self._handle_collision(self.red_robot, self.blue_robot)
