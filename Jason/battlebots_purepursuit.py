@@ -1,7 +1,7 @@
 import numpy as np
 import gymnasium
 import pygame
-from battlebots_env import BattlebotsEnv
+from battlebots_env_new import BattlebotsEnv
 import time
 import serial
 import math
@@ -9,14 +9,14 @@ import math
 def send_pwm_data(left, right, weapon):
     message = f"{left} {right} {weapon}\n"
     # print(f"Sending PWM - Left: {left}, Right: {right}, Weapon: {weapon}")
-    ser.write(message.encode())  # Send data via serial
-    ser.flush() 
+    # ser.write(message.encode())  # Send data via serial
+    # ser.flush() 
 
-try:
-    ser = serial.Serial('COM7', 115200)
-except serial.serialutil.SerialException:
-    print("No connection to COM7!")
-    quit()
+# try:
+#     ser = serial.Serial('COM7', 115200)
+# except serial.serialutil.SerialException:
+#     print("No connection to COM7!")
+#     quit()
 
 left_drive_pwm = 0
 right_drive_pwm = 0
@@ -106,8 +106,11 @@ class PurePursuitAgent:
         
         if abs(angle_difference) < 10 and distance_between_robots < 70:
             hammerFiring.start()
-            
-        forward_speed = (distance_between_robots/1600) + 0.4
+
+        if distance_between_robots > 70:
+            forward_speed = (distance_between_robots/1600) + 0.4
+        else:
+            forward_speed = 0
         left_drive = forward_speed + 1.5 * angle_difference/180
         right_drive = forward_speed - 1.5 * angle_difference/180
         weapon_pwm_override = hammerFiring.update()
@@ -167,7 +170,10 @@ class PurePursuitAgent:
                 angle_to_blue = (angle_to_blue - 90) % 360
                 angle_difference = (red_angle - angle_to_blue + 180) % 360 - 180
 
-            forward_speed = (distance_between_robots/1600) + 0.4
+            if distance_between_robots > 70:
+                forward_speed = (distance_between_robots/1600) + 0.4
+            else:
+                forward_speed = 0
             left_drive = forward_speed + 1.5 * angle_difference/180
             right_drive = forward_speed - 1.5 * angle_difference/180
 
