@@ -256,6 +256,10 @@ void setup() {
   timer = timerBegin(20000);
   timerAttachInterrupt(timer, &checkDeadSignals);
   timerAlarm(timer, 1000, true, 0);
+
+  setLeftPWM(1500);
+  setRightPWM(1500);
+  setWeaponPWM(1500);
 }
 
 bool withinRange(int pulse, int low, int high){ // include low, exclude high
