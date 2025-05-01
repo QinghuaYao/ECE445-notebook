@@ -1,22 +1,30 @@
 import numpy as np
 import gymnasium
 import pygame
-from battlebots_env_new import BattlebotsEnv
+from battle_env import BattlebotsEnv
 import time
 import serial
 import math
+import matplotlib.pyplot as plt
+plt.ion()
 
-def send_pwm_data(left, right, weapon):
+red_traj = []
+blue_traj = []
+
+def send_pwm_data(right, left, weapon):
+    left = np.clip(left, 1400, 1600)
+    right = np.clip(right, 1400, 1600)
+    weapon = np.clip(weapon, 1400, 1600)
     message = f"{left} {right} {weapon}\n"
-    # print(f"Sending PWM - Left: {left}, Right: {right}, Weapon: {weapon}")
-    # ser.write(message.encode())  # Send data via serial
-    # ser.flush() 
+    print(f"Sending PWM - Right: {left}, Left: {right}, Weapon: {weapon}")
+    ser.write(message.encode())  # Send data via serial
+    ser.flush()
 
-# try:
-#     ser = serial.Serial('COM7', 115200)
-# except serial.serialutil.SerialException:
-#     print("No connection to COM7!")
-#     quit()
+try:
+    ser = serial.Serial('COM4', 115200)
+except serial.serialutil.SerialException:
+    print("No connection to COM4!")
+    quit()
 
 left_drive_pwm = 0
 right_drive_pwm = 0
@@ -67,7 +75,10 @@ class PurePursuitAgent:
         blue_x, blue_y = state[5], state[6]
         red_angle = state[4]
         distance_between_robots = state[9]
-        striking_flag = state[10]
+
+        red_traj.append((state[0], state[1], state[4]))
+        blue_traj.append((state[5], state[6], state[7]))
+        # striking_flag = state[10]
 
         front_x = math.cos(math.radians(blue_heading))
         front_y = -math.sin(math.radians(blue_heading)) 
@@ -107,18 +118,21 @@ class PurePursuitAgent:
         if abs(angle_difference) < 10 and distance_between_robots < 70:
             hammerFiring.start()
 
-        if distance_between_robots > 70:
+        if distance_between_robots > 160:
             forward_speed = (distance_between_robots/1600) + 0.4
         else:
             forward_speed = 0
-        left_drive = forward_speed + 1.5 * angle_difference/180
-        right_drive = forward_speed - 1.5 * angle_difference/180
+
+        drive_scale = 0.3
+        left_drive = (forward_speed + 2 * angle_difference/180) * drive_scale
+        right_drive = (forward_speed - 2 * angle_difference/180) * drive_scale
         weapon_pwm_override = hammerFiring.update()
         if weapon_pwm_override is not None:
             weapon_drive_pwm = weapon_pwm_override
         else:
             weapon_drive_pwm = 1500  # Neutral value if not firing
         # print (distance_between_robots)
+
         left_drive_pwm = np.round(np.clip(1500 + left_drive * 500, 1000, 2000))
         right_drive_pwm = np.round(np.clip(1500 + right_drive * 500, 1000, 2000))
         
@@ -184,7 +198,9 @@ class PurePursuitAgent:
             distance_between_robots = math.sqrt((red_x - blue_x)**2 + (red_y - blue_y)**2)
             trajectory.append([red_x, red_y])
         # print (trajectory)
-        return np.array(trajectory, dtype=np.float32)
+        trajectory = np.array(trajectory, dtype=np.float32)
+        # print("Simulated path shape:", trajectory.shape)
+        return [tuple(map(float, pt)) for pt in trajectory]
 
 
 env = BattlebotsEnv()
@@ -200,28 +216,53 @@ def run_pure_pursuit():
         env_times = []
         sim_times = []
         while True:
-            start_time = time.perf_counter()
-            env.render(path = agent.simulate(state))
-            end_time = time.perf_counter()
-            sim_times.append((end_time - start_time) * 1e3)
+            step_start = time.perf_counter()
+
+            # --- Simulation Rendering Time ---
+            render_start = time.perf_counter()
+            env.render()  # comment this to isolate
+            render_end = time.perf_counter()
+
+            # --- Pygame Event Handling Time ---
+            event_start = time.perf_counter()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     env.close()
                     pygame.quit()
                     exit()
-            start_time = time.perf_counter()
+            event_end = time.perf_counter()
+
+            # --- Agent Act Time ---
+            act_start = time.perf_counter()
             action = agent.act(state)
-            end_time = time.perf_counter()
-            env_times.append((end_time - start_time) * 1e6) 
+            act_end = time.perf_counter()
+
+            # --- Environment Step Time ---
+            step_env_start = time.perf_counter()
             next_state, reward, done, truncated, _ = env.step(action)
-            total_reward += reward
+            step_env_end = time.perf_counter()
+
+            # --- Optional Sleep Time ---
+            sleep_start = time.perf_counter()
+            time.sleep(0.01)
+            sleep_end = time.perf_counter()
+
+            # --- Update Step and Total Time ---
             state = next_state
             step += 1
+            step_end = time.perf_counter()
 
-            time.sleep(0.01)
+            print(f"""
+                Step {step} Timing (ms):
+                  Render:   {(render_end - render_start) * 1e3:.2f}
+                  Events:   {(event_end - event_start) * 1e3:.2f}
+                  Act:      {(act_end - act_start) * 1e3:.2f}
+                  StepEnv:  {(step_env_end - step_env_start) * 1e3:.2f}
+                  Sleep:    {(sleep_end - sleep_start) * 1e3:.2f}
+                  Total:    {(step_end - step_start) * 1e3:.2f}
+                """)
 
             if done or truncated:
-                print(f"Pure Pursuit Agent - Score: {total_reward}, Steps: {step}, Maximum Calculation Time: {np.max(env_times):.2f} us, Average Simulation Time: {np.mean(sim_times):.2f} ms")
                 break
             
     env.close()
