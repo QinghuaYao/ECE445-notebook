@@ -15,14 +15,19 @@ Previous week's notebook was lost due to forgeting to commit changes
 Below are the power and input/output connectors for the board
 ![image](https://github.com/user-attachments/assets/3f07a5b6-8017-44ec-b584-96873469a5bc)
 ![image](https://github.com/user-attachments/assets/38165c13-722d-4e35-904f-fa8baf87cd60)
+
 Additionally, purchasing first webcam: [https://a.co/d/4ZRPdg5](url)
+
 Autonomy subsystem flow chart: ![image](https://github.com/user-attachments/assets/8ce12c57-3cf0-42d1-8ecd-d9f75b5947fb)
 
 Using KiCAD to develop first PCB order:
 Schematic:
+
 ![image](https://github.com/user-attachments/assets/500edefc-73e3-42d7-b81c-06eca37276cb)
 PCB:
+
 ![image](https://github.com/user-attachments/assets/7a489d30-9504-443f-9136-bbccd5302bca)
+
 Sending first order info to Michael to purchase digikey parts
 
 Pure-pursuit information:
@@ -37,20 +42,65 @@ TRIED USING BLUETOOTH - BLUETOOTH LOW ENERGY IS SLOW AND REQUIRES CONSTANT SIGNA
 TRIED USING WIFI - WIFI PING HAS LARGE JITTER
 SWITCHING TO ESPNOW
 Latency tests: [https://github.com/QinghuaYao/ECE445-notebook/blob/main/Jason/latency.py](url)
+DEBUG:
+- ISSUE: Boards wouldn't connect
+- SOLUTION: Exchange MAC addresses properly, set them hard in code, no need to change them
+- ISSUE: latency signals sent getting lost, so measurement is incorrect (serial would simply read the signals sent from the server, not the client)
+- SOLUTION: require custom ACK signals to be sent from each board, so serial can distinguish what is being sent and what is being received
+Testing: ![image](https://github.com/user-attachments/assets/23f3723d-6292-4472-b593-a1283139c8f9)
+
+
 First breadboard demo - getting apriltag conversion working: [https://github.com/QinghuaYao/ECE445-notebook/blob/main/Jason/april_tag.py](url)
+
+DEBUG:
+- ISSUE: ghost tags being recognized everywhere
+- SOLUTION: use decision boundary to remove ghost tags
+Camera Parameters obtained using:
+
+[https://pub.towardsai.net/camera-calibration-using-opencv-984775433343](url)
+[https://alphapixeldev.com/opencv-tutorial-part-1-camera-calibration/](url)
+[https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html](url)
+
+NexiGo Webcam params: fx, fy, cx, cy = 850, 850, 740, 425
 
 ## Date: 3/14/25
 Topic: completed first tests of simulation
 ![image](https://github.com/user-attachments/assets/e6af5b22-9c21-4ae9-84dd-64f10ee3506a)
+DEBUG (apriltags):
+- ISSUE: timing is super slow (20ms per pass)
+- SOLUTION: use quad_decimate (0.5 for higher speed)
+
 Environment is in battlebots_env.py: [https://github.com/QinghuaYao/ECE445-notebook/blob/main/Jason/battlebots_env.py](url)
+DEBUG (environment):
+genuinely, countless issues
+the main ones:
+- ISSUE: physics didn't make sense
+- ISSUE: user control was broken
+- ISSUE: robot would not drive even when given commands
+- ISSUE: robot would drive way too fast
+- ISSUE: collision wouldn't work (robots would phase through each other)
+most have been solved by trial and error
 
 ## Date: 3/18/25
 Topic: completed pure-pursuit algorithm: [https://github.com/QinghuaYao/ECE445-notebook/blob/main/Jason/battlebots_purepursuit.py](url)
+DEBUG (algo):
+- ISSUE: left was right, right was left
+- SOLUTION: core switch, had to standardize direction between environment 
+- ISSUE: adjustments to the actual speed of the robot, since left and right drive were going too fast
+- SOLUTION: tweaking velocity values in battlebots_environment
+
 Output can be logged each state
 Total time average for entire algorithm: 60.015714285714274 us
 Adjusting flowchart for anti-weapon-on-weapon setup: 
 ![image](https://github.com/user-attachments/assets/0275434f-f120-4354-b499-2c1b3a12330e)
 ![image](https://github.com/user-attachments/assets/f009e6cf-7cad-472f-a846-1d25df76022c)
+
+Also diagrams/formulas for IPR:
+![image](https://github.com/user-attachments/assets/651e7012-c029-4e44-b2ae-8ab52caceef8)
+![image](https://github.com/user-attachments/assets/40982b9f-5a9a-4fc9-a0be-8a06a8b985c8)
+![image](https://github.com/user-attachments/assets/448896d2-e91f-46ac-a69f-41ee1b3f1e4a)
+![image](https://github.com/user-attachments/assets/b3406b9d-55d1-4cf0-a025-bdbb35193f33)
+![image](https://github.com/user-attachments/assets/319fa073-3758-47c1-a4e6-d7dbaba43757)
 
 ## Date: 3/25/25
 Topic: issues with hardware, need to fix, got signals sent to board
@@ -61,6 +111,25 @@ We should be fine, with time to finish before mid-April
 Seeed Studio Xiao ESP32S3 pinout ![image](https://github.com/user-attachments/assets/e006f1a8-3120-43a0-ba6e-544467f3d3bb)
 Arduino client (on-robot code): [https://github.com/QinghuaYao/ECE445-notebook/blob/main/Jason/arduino_client.ino](url)
 Arduino server (from computer): [https://github.com/QinghuaYao/ECE445-notebook/blob/main/Jason/arduino_server.ino](url)
+DEBUG (client):
+too many
+- ISSUE: MCPWM unit 0 doesn't work
+- SOLUTION: investigation leads to seeed studio xiao not actually supporting MCPWM unit 0, switching all other timers to 0
+- ISSUE: TIMER doesn't properly time
+- SOLUTION: investigation leads to ESP32 library using an outdated version of the ESP32S3 hardware timers, have to guess and check actual numbers
+- ISSUE: reading input PWM doesn't work, signals stall out due to ISRs not firing if no signal is received
+- SOLUTION: add watchdog to reset signals back to 0 if no input is received
+- ISSUE: 30 different issues with the Wifi signals, and threading
+- SOLUTION: lots of documentation reading [https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/get-started/index.html](url)
+DEBUG (server):
+too many as well
+- ISSUE: not connected multiple times
+- SOLUTION: switch to connecting using MAC address as peers directly instead of searching for peers
+- ISSUE: sending signals ends up with signals arriving in incorrect order
+- SOLUTION: either use ACK with custom signals for each input, or send all of them at once using a custom pwm_data struct
+
+Added pure-pursuit information, by simming the next motions of the robot in advance (very little drain, 3ms of CPU use for 300 steps)
+Video of it all working: [https://drive.google.com/file/d/1QAclTgO31wBWgzG7DGrPYsUrj7KnDfsV/view?usp=sharing](url)
 
 ## Date: 4/1/25
 Topic: 3/4 subsystems working
@@ -92,15 +161,10 @@ Apriltag recognition performed decently well, will need to still use Optical Flo
 ## Date: 4/23/25
 Topic: Completed Mock Demo
 Demo link: [https://drive.google.com/file/d/1CyM5mAFQG4s7LUPjuEVyyVv1AHwV2Kl4/view?usp=sharing](url)
+Deviation Verification: ![image](https://github.com/user-attachments/assets/e1b4d4ab-bcf5-4be7-8369-41a354848b30)
+Autonomous step timing: ![image](https://github.com/user-attachments/assets/45b186ef-0260-46a7-acea-c410e1226625)
+
 Hopefully hardware gets completed by the time I can resume work on Monday
-
-## Date: 4/28/25
-Topic: Night before demo
-Issues with hardware still, using optical flow and SolvePnP, finalized battlebots environment in battle_env: [https://github.com/QinghuaYao/ECE445-notebook/blob/main/Jason/battle_env.py](url)
-
-## Date: 
-
-
 
 
 
