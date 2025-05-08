@@ -166,6 +166,17 @@ Autonomous step timing: ![image](https://github.com/user-attachments/assets/45b1
 
 Hopefully hardware gets completed by the time I can resume work on Monday
 
+## Date: 4/28/25
+Topic: Night before demo
+Issues with hardware still, using optical flow and SolvePnP, finalized battlebots environment in battle_env: [https://github.com/QinghuaYao/ECE445-notebook/blob/main/Jason/battle_env.py](url)
+DEBUG (battle_env):
+- ISSUE: camera doesn't connect
+- SOLUTION: iterate through all cameras until you find the correct camera (my laptop has like 5 different camera applications)
+- ISSUE: camera takes >30 secs to initialize
+- SOLUTION: {NEVER SOLVED}
+- ISSUE: solvePnP requires multiple points
+- SOLUTION: measure all 9 points (top left to bottom right)
+Porting was not successful, the serial connection was damaged, we'll see 
 
 
 
