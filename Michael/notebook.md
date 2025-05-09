@@ -1,6 +1,5 @@
 # Date: Week of 2/3
-- https://www.espressif.com/en/products/socs/esp32
-- https://docs.espressif.com/projects/esp-idf/en/v4.4/esp32s3/api-reference/peripherals/gpio.html 
+https://www.espressif.com/en/products/socs/esp32 <br> https://docs.espressif.com/projects/esp-idf/en/v4.4/esp32s3/api-reference/peripherals/gpio.html 
 - The ESP32 is a low-cost, low-power system on a chip (SoC) with integrated Wi-Fi and Bluetooth, widely used in embedded systems and Internet of Things (IoT) projects. It’s developed by Espressif Systems, a company based in Shanghai.
 
 - Key Features:
