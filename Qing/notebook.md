@@ -74,6 +74,12 @@ $$
 ## bread boad demo
 we decide to demo the battery reading subsystem
 
+The democode is called Demo_Code_ECE445
+
+# 03/13/2025
+
+Test the Bluetooth Functionality again. Test result could be checked in img/BlueTooth_test.png
+
 # 03/20/2025
 ## WiFi connection
 ### 3 wifi modes
@@ -88,3 +94,37 @@ we decide to demo the battery reading subsystem
    code: WiFi.mode(WIFI_AP_STA);
 We will use STA mode for this project since we want to send data between ESP32 and a computer
 https://deepbluembedded.com/esp32-wifi-library-examples-tutorial-arduino/
+
+# 03/27/2025
+
+Test the Wi-Fi functionality of ESP32-S3. Code can be found in Wifi_transfer.ino (for hardware) and Wifi.py (for test latency)
+
+the test result is in img/WiFi_test and WiFi_test1
+
+However, both WiFi and the Bluetooth are slow and low-efficient. Jason decides to use ESP-NOW
+
+# 04/07/2025
+
+redesign the schematic and the PCB
+
+Add I/O ports, voltage divider for PWM inputs
+
+Changed the IMU to LIS331(data sheet is in this folder)
+
+Changes the MCU to ESP32S3-Wroom-1, don't have to consider cystals
+
+# 04/17/2025
+
+Try to solder the PCB without stencil
+
+failed because it's difficult to solder the IMU and ESP32S3 with hands
+
+# 04/27/2025
+
+Finished soldering
+
+# 04/29/2025
+
+Test the PCB, the results are shown in videos
+https://drive.google.com/file/d/1Wf_zj_Yllhc7Nl9g81vWwoR2AeOOUYyU/view?usp=sharing
+https://drive.google.com/file/d/1DK5xYzDkgq6wUjl2HwUs8gxq-mtZnsGS/view?usp=sharing

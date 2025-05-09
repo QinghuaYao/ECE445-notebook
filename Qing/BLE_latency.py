@@ -3,32 +3,32 @@ from bleak import BleakClient, BleakScanner
 import time
 import re
 
-# 设置目标设备名称、服务 UUID 和特征 UUID
+# Set target device name, service UUID, and characteristic UUID
 DEVICE_NAME = "ECE 445 Group 43"
 SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
-# 正则表达式用于提取消息中的时间戳（格式例如 "t=123456"）
+# Regular expression to extract the timestamp from the message (format like "t=123456")
 timestamp_regex = re.compile(r"t=(\d+)")
 
-# 通知回调函数
+# Notification callback function
 def notification_handler(sender, data):
     msg = data.decode("utf-8")
-    print("\n接收到BLE消息：", msg)
+    print("\nReceived BLE message:", msg)
     
-    # 尝试从消息中提取时间戳
+    # Try to extract timestamp from the message
     match = timestamp_regex.search(msg)
     if match:
-        esp_time = int(match.group(1))  # ESP32 发送的时间戳（毫秒）
-        pc_time = int(time.time() * 1000)  # 当前电脑时间（毫秒）
+        esp_time = int(match.group(1))  # Timestamp sent by ESP32 (milliseconds)
+        pc_time = int(time.time() * 1000)  # Current PC time (milliseconds)
         latency = pc_time - esp_time
-        print("蓝牙延迟：", latency, "毫秒")
+        print("Bluetooth latency:", latency, "ms")
     else:
-        print("警告：消息中未找到时间戳。")
+        print("Warning: Timestamp not found in the message.")
 
-# 主程序：扫描设备、连接并订阅通知
+# Main function: scan for device, connect, and subscribe to notifications
 async def main():
-    print("正在扫描 BLE 设备...")
+    print("Scanning for BLE devices...")
     devices = await BleakScanner.discover()
     target = None
 
@@ -38,20 +38,21 @@ async def main():
             break
 
     if not target:
-        print(f"未找到名称包含 '{DEVICE_NAME}' 的设备")
+        print(f"No device found with name containing '{DEVICE_NAME}'")
         return
 
-    print(f"找到设备：{target.name}，地址：{target.address}，正在连接...")
+    print(f"Found device: {target.name}, Address: {target.address}, Connecting...")
     async with BleakClient(target.address) as client:
-        print("连接成功，正在订阅通知...")
+        print("Connected successfully, subscribing to notifications...")
         await client.start_notify(CHARACTERISTIC_UUID, notification_handler)
         
-        # 保持运行状态以接收通知
+        # Keep running to receive notifications
         try:
             while True:
                 await asyncio.sleep(1)
         except KeyboardInterrupt:
-            print("退出程序...")
+            print("Exiting program...")
 
 if __name__ == "__main__":
     asyncio.run(main())
+
