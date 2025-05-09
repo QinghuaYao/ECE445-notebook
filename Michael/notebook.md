@@ -1,17 +1,17 @@
 # Date: Week of 2/3
-https://www.espressif.com/en/products/socs/esp32
-https://docs.espressif.com/projects/esp-idf/en/v4.4/esp32s3/api-reference/peripherals/gpio.html
-The ESP32 is a low-cost, low-power system on a chip (SoC) with integrated Wi-Fi and Bluetooth, widely used in embedded systems and Internet of Things (IoT) projects. It’s developed by Espressif Systems, a company based in Shanghai.
+- https://www.espressif.com/en/products/socs/esp32
+- https://docs.espressif.com/projects/esp-idf/en/v4.4/esp32s3/api-reference/peripherals/gpio.html 
+- The ESP32 is a low-cost, low-power system on a chip (SoC) with integrated Wi-Fi and Bluetooth, widely used in embedded systems and Internet of Things (IoT) projects. It’s developed by Espressif Systems, a company based in Shanghai.
 
-Key Features:
-Dual-core Tensilica Xtensa LX6 (or single-core in some variants)
-Wi-Fi (802.11 b/g/n) and Bluetooth 4.2 / BLE
-Up to 520 KB SRAM and support for external flash
-GPIOs, ADC, DAC, UART, SPI, I2C, PWM, and more
-Ultra-low power modes for battery-powered applications
-Integrated Hall sensor and temperature sensor
+- Key Features:
+- Dual-core Tensilica Xtensa LX6 (or single-core in some variants)
+- Wi-Fi (802.11 b/g/n) and Bluetooth 4.2 / BLE
+- Up to 520 KB SRAM and support for external flash
+- GPIOs, ADC, DAC, UART, SPI, I2C, PWM, and more
+- Ultra-low power modes for battery-powered applications
+- Integrated Hall sensor and temperature sensor
 
-ESP32 can be interfaced with other systems to provide WiFi and Bluetooth functionality through SPI / SDIO or I2C / UART interfaces. 
+- ESP32 can be interfaced with other systems to provide WiFi and Bluetooth functionality through SPI / SDIO or I2C / UART interfaces. 
 
 # Date: Week of 2/10
 MPU6050 for acceleration data
