@@ -3,7 +3,7 @@ https://www.espressif.com/en/products/socs/esp32 <br> https://docs.espressif.com
 The ESP32 is a low-cost, low-power system on a chip (SoC) with integrated Wi-Fi and Bluetooth, widely used in embedded systems and Internet of Things (IoT) projects. It’s developed by Espressif Systems, a company based in Shanghai.
 
 <br>
-Key Features:
+Key Features:<br>
 - Dual-core Tensilica Xtensa LX6 (or single-core in some variants)
 - Wi-Fi (802.11 b/g/n) and Bluetooth 4.2 / BLE
 - Up to 520 KB SRAM and support for external flash
