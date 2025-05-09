@@ -4,11 +4,11 @@ The ESP32 is a low-cost, low-power system on a chip (SoC) with integrated Wi-Fi 
 
 <br>
 Key Features:<br>
-- Dual-core Tensilica Xtensa LX6 (or single-core in some variants)
-- Wi-Fi (802.11 b/g/n) and Bluetooth 4.2 / BLE
-- Up to 520 KB SRAM and support for external flash
-- GPIOs, ADC, DAC, UART, SPI, I2C, PWM, and more
-- Ultra-low power modes for battery-powered applications
+- Dual-core Tensilica Xtensa LX6 (or single-core in some variants) <br>
+- Wi-Fi (802.11 b/g/n) and Bluetooth 4.2 / BLE <br>
+- Up to 520 KB SRAM and support for external flash <br>
+- GPIOs, ADC, DAC, UART, SPI, I2C, PWM, and more <br>
+- Ultra-low power modes for battery-powered applications <br>
 - Integrated Hall sensor and temperature sensor
 <br>
 ESP32 can be interfaced with other systems to provide WiFi and Bluetooth functionality through SPI / SDIO or I2C / UART interfaces. 
