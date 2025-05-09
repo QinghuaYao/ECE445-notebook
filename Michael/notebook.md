@@ -1,32 +1,32 @@
 # Date: Week of 2/3
-https://www.espressif.com/en/products/socs/esp32 <br> https://docs.espressif.com/projects/esp-idf/en/v4.4/esp32s3/api-reference/peripherals/gpio.html 
-- The ESP32 is a low-cost, low-power system on a chip (SoC) with integrated Wi-Fi and Bluetooth, widely used in embedded systems and Internet of Things (IoT) projects. It’s developed by Espressif Systems, a company based in Shanghai.
-
-- Key Features:
+https://www.espressif.com/en/products/socs/esp32 <br> https://docs.espressif.com/projects/esp-idf/en/v4.4/esp32s3/api-reference/peripherals/gpio.html <br>
+The ESP32 is a low-cost, low-power system on a chip (SoC) with integrated Wi-Fi and Bluetooth, widely used in embedded systems and Internet of Things (IoT) projects. It’s developed by Espressif Systems, a company based in Shanghai.
+<br>
+Key Features:
 - Dual-core Tensilica Xtensa LX6 (or single-core in some variants)
 - Wi-Fi (802.11 b/g/n) and Bluetooth 4.2 / BLE
 - Up to 520 KB SRAM and support for external flash
 - GPIOs, ADC, DAC, UART, SPI, I2C, PWM, and more
 - Ultra-low power modes for battery-powered applications
 - Integrated Hall sensor and temperature sensor
-
-- ESP32 can be interfaced with other systems to provide WiFi and Bluetooth functionality through SPI / SDIO or I2C / UART interfaces. 
+<br>
+ESP32 can be interfaced with other systems to provide WiFi and Bluetooth functionality through SPI / SDIO or I2C / UART interfaces. 
 
 # Date: Week of 2/10
-MPU6050 for acceleration data
-6-axis MEMS motion tracking device developed by InvenSense (now part of TDK). It combines a 3-axis gyroscope and a 3-axis accelerometer in a single chip, making it ideal for motion-sensing and orientation-tracking applications.
-6 Degrees of Freedom (DoF):
-3-axis accelerometer (±2g, ±4g, ±8g, ±16g)
-3-axis gyroscope (±250, ±500, ±1000, ±2000 °/sec)
+MPU6050 for acceleration data <br>
+6-axis MEMS motion tracking device developed by InvenSense (now part of TDK). It combines a 3-axis gyroscope and a 3-axis accelerometer in a single chip, making it ideal for motion-sensing and orientation-tracking applications.<br>
+6 Degrees of Freedom (DoF):<br>
+- 3-axis accelerometer (±2g, ±4g, ±8g, ±16g)
+- 3-axis gyroscope (±250, ±500, ±1000, ±2000 °/sec)
 Digital Motion Processor (DMP):
-Onboard processor that can compute complex motion processing algorithms (e.g., sensor fusion) internally, reducing the load on the main microcontroller.
-I²C and SPI communication support
-16-bit ADCs for each axis (high resolution)
-Power supply: 2.3V–3.4V (typically 3.3V)
-
-Accelerometer: Measures linear acceleration (e.g., gravity, movement).
-Gyroscope: Measures angular velocity (rotation rate).
-Temperature sensor: Provides die temperature reading (useful for compensation).
+- Onboard processor that can compute complex motion processing algorithms (e.g., sensor fusion) internally, reducing the load on the main microcontroller.
+- I²C and SPI communication support
+- 16-bit ADCs for each axis (high resolution)
+- Power supply: 2.3V–3.4V (typically 3.3V)
+<br>
+Accelerometer: Measures linear acceleration (e.g., gravity, movement). <br>
+Gyroscope: Measures angular velocity (rotation rate). <br>
+Temperature sensor: Provides die temperature reading (useful for compensation). <br>
 
 
 # Date: Week of 2/17
